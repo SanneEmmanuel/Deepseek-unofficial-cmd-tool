@@ -1,4 +1,4 @@
-# ⚠️ Unofficial DeepSeek Cmd tool and Client – README
+# ⚠️ Unofficial DeepSeek Cmd tool and Client – 
 
 > **Legal & Ethical Notice**  
 > This project is **unofficial**, **not endorsed**, and **not affiliated** with DeepSeek (深度求索).  
