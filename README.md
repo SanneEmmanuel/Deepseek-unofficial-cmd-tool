@@ -1,410 +1,158 @@
-# Deepseek-unofficial-cmd-tool
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DeepSeek API – Unofficial C Client</title>
+# ⚠️ Unofficial DeepSeek Cmd tool and Client – README
 
-<style>
-    *{
-        margin:0;
-        padding:0;
-        box-sizing:border-box;
-    }
+> **Legal & Ethical Notice**  
+> This project is **unofficial**, **not endorsed**, and **not affiliated** with DeepSeek (深度求索).  
+> It is provided **for educational and research purposes only** – to study networking, WebAssembly challenges, and Server‑Sent Events in a terminal environment.  
+>  
+> **Using this client may violate DeepSeek’s Terms of Service.**  
+> You are solely responsible for how you use it. The author assumes **no liability** for account bans, legal consequences, or any other damages.  
+>  
+> Always respect the platform’s rate limits, do not overload their services, and stop using this tool immediately if it conflicts with DeepSeek’s official policies.
 
-    body{
-        background:#0d1117;
-        color:#e6edf3;
-        font-family:Arial, Helvetica, sans-serif;
-        line-height:1.8;
-    }
+---
 
-    .container{
-        width:90%;
-        max-width:1200px;
-        margin:auto;
-        padding:40px 20px;
-    }
+# DeepSeek API – Unofficial C Client
 
-    header{
-        text-align:center;
-        padding:80px 20px;
-        border-bottom:1px solid #30363d;
-    }
+**Reverse‑engineered command‑line interface for DeepSeek Web Chat**  
+Written entirely in C by Sanne Karibo. No browser automation at runtime.
 
-    header h1{
-        font-size:3rem;
-        margin-bottom:20px;
-        color:#58a6ff;
-    }
+![C Language](https://img.shields.io/badge/C-99-blue) ![SSE Streaming](https://img.shields.io/badge/SSE-Streaming-brightgreen) ![WASM Solver](https://img.shields.io/badge/WASM-PoW-orange) ![libcurl](https://img.shields.io/badge/libcurl-HTTP-yellow) ![Wasmtime](https://img.shields.io/badge/Wasmtime-Runtime-red)
 
-    header p{
-        font-size:1.2rem;
-        color:#8b949e;
-    }
+## Overview
 
-    section{
-        margin-top:60px;
-    }
+This is a lightweight native implementation that reproduces the request flow of the official DeepSeek browser interface.  
+It handles session creation, Proof‑of‑Work challenges (via WebAssembly), and real‑time SSE streaming – all from a terminal.
 
-    h2{
-        color:#58a6ff;
-        margin-bottom:20px;
-        border-left:5px solid #58a6ff;
-        padding-left:15px;
-    }
+**Developed by Sanne Karibo** for networking analysis, systems programming, and protocol experimentation.
 
-    p{
-        margin-bottom:20px;
-    }
+## Features
 
-    ul{
-        margin-left:30px;
-        margin-bottom:20px;
-    }
+- Native C implementation (minimal dependencies)
+- Real‑time streaming responses (Server‑Sent Events)
+- Automatic chat session creation & persistence
+- WebAssembly Proof‑of‑Work solver (using Wasmtime)
+- Markdown‑friendly AI responses
+- DeepSeek V3 support & R1 reasoning foundation
+- Low memory footprint – no browser needed during execution
 
-    li{
-        margin-bottom:10px;
-    }
+## Architecture
 
-    .card{
-        background:#161b22;
-        padding:25px;
-        border-radius:12px;
-        border:1px solid #30363d;
-        margin-bottom:25px;
-    }
+The client replicates the official DeepSeek pipeline:
 
-    code{
-        background:#21262d;
-        padding:2px 6px;
-        border-radius:5px;
-        color:#79c0ff;
-    }
+1. Create a chat session  
+2. Request a PoW challenge  
+3. Execute the WASM solver  
+4. Generate an authenticated PoW response  
+5. Submit the completion request  
+6. Receive and parse SSE events  
+7. Display incremental responses
 
-    pre{
-        background:#161b22;
-        padding:20px;
-        overflow:auto;
-        border-radius:12px;
-        border:1px solid #30363d;
-        margin-top:15px;
-        margin-bottom:25px;
-    }
+## Dependencies
 
-    .footer{
-        text-align:center;
-        margin-top:80px;
-        padding:30px;
-        border-top:1px solid #30363d;
-        color:#8b949e;
-    }
+- **libcurl** – HTTP networking  
+- **cJSON** – JSON parsing  
+- **Wasmtime** – WebAssembly runtime  
+- **GCC** – C compiler
 
-    .badge{
-        display:inline-block;
-        padding:8px 15px;
-        background:#238636;
-        border-radius:30px;
-        margin:5px;
-        font-size:0.9rem;
-    }
+## Compilation (Linux)
 
-    .warning{
-        background:#2d1b00;
-        border:1px solid #9e6a03;
-        padding:20px;
-        border-radius:10px;
-        margin-top:20px;
-    }
+Install required system packages:
 
-</style>
-</head>
-
-<body>
-
-<header>
-    <h1>DeepSeek API – Unofficial C Client</h1>
-    <p>
-        Reverse-engineered command-line interface for DeepSeek Web Chat
-    </p>
-
-    <div style="margin-top:25px;">
-        <span class="badge">C Language</span>
-        <span class="badge">SSE Streaming</span>
-        <span class="badge">WASM Solver</span>
-        <span class="badge">libcurl</span>
-        <span class="badge">Wasmtime</span>
-    </div>
-</header>
-
-<div class="container">
-
-<section>
-    <h2>Overview</h2>
-
-    <div class="card">
-        <p>
-            DeepSeek API – Unofficial C Client is a lightweight native implementation
-            of the DeepSeek web communication system written entirely in C.
-        </p>
-
-        <p>
-            The project reverse-engineers the official DeepSeek browser interface
-            and reproduces the request flow directly from a terminal environment
-            without requiring browser automation during runtime.
-        </p>
-
-        <p>
-            Developed by <strong>Sanne Karibo</strong> for educational research,
-            networking analysis, systems programming, and protocol experimentation.
-        </p>
-    </div>
-</section>
-
-<section>
-    <h2>Features</h2>
-
-    <div class="card">
-        <ul>
-            <li>Native C implementation</li>
-            <li>Real-time streaming responses</li>
-            <li>Server-Sent Events (SSE) parser</li>
-            <li>Automatic chat session creation</li>
-            <li>WebAssembly Proof-of-Work solver</li>
-            <li>Markdown-friendly AI responses</li>
-            <li>Session persistence</li>
-            <li>DeepSeek V3 support</li>
-            <li>R1 reasoning compatibility foundation</li>
-            <li>Low memory footprint</li>
-            <li>No browser dependency during execution</li>
-        </ul>
-    </div>
-</section>
-
-<section>
-    <h2>Project Architecture</h2>
-
-    <div class="card">
-        <p>The client reproduces the official DeepSeek request pipeline:</p>
-
-        <ul>
-            <li>Create chat session</li>
-            <li>Request PoW challenge</li>
-            <li>Execute challenge solver through WASM</li>
-            <li>Generate authenticated PoW response</li>
-            <li>Submit completion request</li>
-            <li>Receive streamed SSE events</li>
-            <li>Parse and display incremental responses</li>
-        </ul>
-    </div>
-</section>
-
-<section>
-    <h2>Dependencies</h2>
-
-    <div class="card">
-        <ul>
-            <li><strong>libcurl</strong> – HTTP networking</li>
-            <li><strong>cJSON</strong> – JSON parsing</li>
-            <li><strong>Wasmtime</strong> – WebAssembly runtime</li>
-            <li><strong>GCC</strong> – C compiler</li>
-        </ul>
-    </div>
-</section>
-
-<section>
-    <h2>Compilation</h2>
-
-    <div class="card">
-
-        <p>Install required packages on Linux:</p>
-
-<pre>
+```bash
 sudo apt update
+sudo apt install build-essential gcc libcurl4-openssl-dev libcjson-dev
+```
 
-sudo apt install \
-    build-essential \
-    gcc \
-    libcurl4-openssl-dev \
-    libcjson-dev
-</pre>
+Install Wasmtime from [https://wasmtime.dev](https://wasmtime.dev) or via your package manager.
 
-        <p>
-            Install Wasmtime from:
-        </p>
+Compile the project:
 
-        <p>
-            https://wasmtime.dev
-        </p>
+```bash
+gcc deepseek.c -o deepseek -lcurl -lcjson -lwasmtime
+```
 
-        <p>Compile the project:</p>
+Make sure the file `wasm.wasm` is present in the same directory.
 
-<pre>
-gcc deepseek.c -o deepseek \
-    -lcurl \
-    -lcjson \
-    -lwasmtime
-</pre>
+## Authentication – Obtaining Session & Token
 
-        <p>
-            Make sure <code>wasm.wasm</code> exists in the same directory.
-        </p>
+The client needs two values from your DeepSeek account:
 
-    </div>
-</section>
+- `ds_session_id` (from cookies)  
+- `authorization` token (Bearer)
 
-<section>
-    <h2>Authentication</h2>
+**How to obtain them:**
 
-    <div class="card">
+1. Log into [chat.deepseek.com](https://chat.deepseek.com)  
+2. Open browser developer tools (F12)  
+3. Go to the **Network** tab  
+4. Send a message in the chat  
+5. Find the `completion` request  
+6. Copy:
+   - `Cookie` header → `ds_session_id=...`
+   - `Authorization` header → `Bearer ...` (the token part)
 
-        <p>
-            The client requires two authentication values from your
-            DeepSeek account:
-        </p>
+> ⚠️ **Security** – These credentials grant access to your DeepSeek session.  
+> Keep them private. Never commit or share your configuration file.
 
-        <ul>
-            <li><code>ds_session_id</code></li>
-            <li><code>authorization token</code></li>
-        </ul>
+## Initialization
 
-        <p>To obtain them:</p>
+Save your session and token:
 
-        <ol style="margin-left:25px;">
-            <li>Login to chat.deepseek.com</li>
-            <li>Open browser developer tools</li>
-            <li>Open Network tab</li>
-            <li>Send a message</li>
-            <li>Inspect the completion request</li>
-            <li>Copy:
-                <ul>
-                    <li>Cookie → ds_session_id</li>
-                    <li>Authorization → Bearer token</li>
-                </ul>
-            </li>
-        </ol>
-
-    </div>
-</section>
-
-<section>
-    <h2>Initialization</h2>
-
-    <div class="card">
-
-        <p>
-            Save your session and token:
-        </p>
-
-<pre>
+```bash
 ./deepseek init YOUR_DS_SESSION YOUR_BEARER_TOKEN
-</pre>
+```
 
-        <p>
-            This creates:
-        </p>
+This creates `~/.deepseek_config` with your credentials.
 
-<pre>
-~/.deepseek_config
-</pre>
+## Usage
 
-    </div>
-</section>
+Send a prompt:
 
-<section>
-    <h2>Usage</h2>
-
-    <div class="card">
-
-        <p>Send a prompt:</p>
-
-<pre>
+```bash
 ./deepseek "Explain quantum computing"
-</pre>
+```
 
-        <p>Example:</p>
+Example:
 
-<pre>
+```bash
 ./deepseek "Write a Linux shell script for backups"
-</pre>
+```
 
-        <p>
-            Responses stream directly to the terminal in real time.
-        </p>
+Responses stream directly to the terminal in real time.
 
-    </div>
-</section>
+## Streaming Engine
 
-<section>
-    <h2>Streaming Engine</h2>
+The native SSE parser handles:
 
-    <div class="card">
+- Incremental response fragments
+- Token usage tracking
+- Thinking / reasoning streams
+- Search citations
+- Message relationships
+- Conversation titles
 
-        <p>
-            The client includes a fully native SSE parser capable of:
-        </p>
+## ⚠️ Important Legal & Safety Warnings
 
-        <ul>
-            <li>Handling incremental response fragments</li>
-            <li>Tracking token usage</li>
-            <li>Parsing thinking streams</li>
-            <li>Managing search citations</li>
-            <li>Maintaining message relationships</li>
-            <li>Capturing conversation titles</li>
-        </ul>
+1. **Unofficial nature** – This project is not created, approved, or maintained by DeepSeek.  
+2. **Terms of Service** – Using automated clients may violate DeepSeek’s ToS. You risk account suspension or permanent ban.  
+3. **No warranty** – The software is provided “AS IS”, without any warranties. The author is not liable for any damage or loss.  
+4. **Rate limits** – Do not spam or overload DeepSeek’s infrastructure.  
+5. **Educational use only** – You are expected to study networking, WASM, and SSE; not to circumvent security or monetize the API.  
+6. **Token expiration** – Session tokens may expire or become invalid when DeepSeek changes its authentication flow.  
+7. **Respect copyright** – Do not use this to extract or redistribute DeepSeek’s proprietary content in violation of their rights.
 
-    </div>
-</section>
+By using this software, you agree that you have read this notice and that you assume full responsibility for any consequences.
 
-<section>
-    <h2>Security Notice</h2>
+## License
 
-    <div class="warning">
-        <p>
-            This project is unofficial and not affiliated with DeepSeek.
-        </p>
+Copyright © 2025 Sanne Karibo  
 
-        <p>
-            Your session token grants access to your account session.
-            Keep it private and never share your configuration file publicly.
-        </p>
+This program is free software: you can redistribute it and/or modify it under the terms of the **GNU Affero General Public License v3.0** (AGPL-3.0).  
 
-        <p>
-            Tokens may expire or become invalid if the platform changes
-            authentication methods.
-        </p>
-    </div>
-</section>
+This program is distributed in the hope that it will be useful, but **WITHOUT ANY WARRANTY**; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the AGPL-3.0 license for more details.
 
-<section>
-    <h2>License</h2>
+A copy of the license is available at [https://www.gnu.org/licenses/agpl-3.0.html](https://www.gnu.org/licenses/agpl-3.0.html).
 
-    <div class="card">
+---
 
-        <p>
-            Licensed under the GNU Affero General Public License v3.0.
-        </p>
-
-        <p>
-            This project is distributed for educational and research purposes
-            without warranty of any kind.
-        </p>
-
-    </div>
-</section>
-
-<div class="footer">
-    <p>
-        DeepSeek API – Unofficial C Client
-    </p>
-
-    <p>
-        Copyright © 2025 Sanne Karibo
-    </p>
-</div>
-
-</div>
-
-</body>
-</html>
+**Use responsibly. Respect the platform. Code for learning, not for abuse.**
